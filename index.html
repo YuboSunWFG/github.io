@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checking your score</title>
+    <style>
+        * {
+            font-size: 30px;
+        }
+
+        table {
+            border: 2px solid black;
+            margin-top: 20px;
+        }
+
+        table tr th {
+            border: 2px solid black;
+            padding: 0 20px;
+        }
+
+        table tr td {
+            border: 2px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <label for="range">Agent Code:</label>
+    <input type="text" id="agentCode" placeholder="Enter Your Agent Code">
+
+    <button onclick="getData()">Get your score</button>
+
+    <div id="output"></div>
+    <div id="details"></div>
+
+    <script>
+        const apiKey = 'AIzaSyBRrpodq4a7_6366fVvLFa4ne5qu1ow7k4';
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/1PxEk88jAMwNQpvKv5OOcZdCFGcCIy9VE8EL1nH2NC7o/values/Sheet1!A1:V?key=${apiKey}`;
+        var details = document.getElementById('details');
+
+        function getData() {
+            output.innerHTML = "";
+            details.innerHTML = "";
+            const agentCode = document.getElementById('agentCode').value;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const values = data.values;
+                    const output = document.getElementById('output');
+                    values.some(row => {
+                        if (row[2] == agentCode) {
+                            output.innerHTML += `<table><tr><th>Agent Code</th><th>Agent ID</th><th>Ranking Score</th><th>Rank</th><th>Total Score</th><th>Details</th></tr><tr><td>${row[0]}</td><td>${row[2]}</td><td>${row[7]}</td><td>${row[8]}</td><td>${row[9]}</td><td><button onclick="getDetails()">Get your score details</td></table>`;
+                        }
+                    });
+                })
+                .catch(error => console.log('Error:', error));
+        }
+
+        function getDetails() {
+            details.innerHTML += `<h1>I got sth!</h1>`
+        }
+    </script>
+</body>
+
+</html>
