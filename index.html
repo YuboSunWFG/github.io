@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checking your score</title>
     <style>
-        * {
+        body, input, button{
             font-size: 30px;
         }
 
@@ -24,6 +24,7 @@
             border: 2px solid black;
             text-align: center;
         }
+
     </style>
 </head>
 
@@ -34,16 +35,28 @@
     <button onclick="getData()">Get your score</button>
 
     <div id="output"></div>
-    <div id="details"></div>
+    <div id="details" style="font-size: 20px;"></div>
 
     <script>
-        const apiKey = 'AIzaSyBRrpodq4a7_6366fVvLFa4ne5qu1ow7k4';
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/1PxEk88jAMwNQpvKv5OOcZdCFGcCIy9VE8EL1nH2NC7o/values/Sheet1!A1:V?key=${apiKey}`;
+        const apiKey = 'AIzaSyAqRR4OTt6Y37d5VS22svO2pdniPnLvBKc';
+
         var details = document.getElementById('details');
+        var hw1 = document.getElementById('hw1')
+        function ciEquals(a, b) {
+            return typeof a === 'string' && typeof b === 'string'
+                ? a.localeCompare(b, undefined, { sensitivity: 'accent' }) === 0
+                : a === b;
+        }
+
+        var flag1 = false;
+        var flag2 = false;
+        var flag3 = false;
+        var flag4 = false;
 
         function getData() {
             output.innerHTML = "";
             details.innerHTML = "";
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/1dQfNMmo__8T-8nzwJ0v-i_dpUVUh8n-5gOH0eoo5wZ8/values/Main!A1:V?key=${apiKey}`;
             const agentCode = document.getElementById('agentCode').value;
             fetch(url)
                 .then(response => response.json())
@@ -51,7 +64,7 @@
                     const values = data.values;
                     const output = document.getElementById('output');
                     values.some(row => {
-                        if (row[2] == agentCode) {
+                        if (ciEquals(row[2], agentCode)) {
                             output.innerHTML += `<table><tr><th>Agent Code</th><th>Agent ID</th><th>Ranking Score</th><th>Rank</th><th>Total Score</th><th>Details</th></tr><tr><td>${row[0]}</td><td>${row[2]}</td><td>${row[7]}</td><td>${row[8]}</td><td>${row[9]}</td><td><button onclick="getDetails()">Get your score details</td></table>`;
                         }
                     });
@@ -60,7 +73,192 @@
         }
 
         function getDetails() {
-            details.innerHTML += `<h1>I got sth!</h1>`
+            getDetails_hw1();
+            if(flag1) {
+                setTimeout(100)
+                getDetails_hw2();
+            }
+            if(flag2) {
+                setTimeout(100)
+                getDetails_hw3();
+            }
+            if(flag3) {
+                setTimeout(100)
+                getDetails_hw4();
+            }
+            if(flag4) {
+                setTimeout(100)
+                getDetails_hw5();
+            }
+        }
+
+        function getDetails_hw1() {
+            details.innerHTML = "";
+            const agentCode = document.getElementById('agentCode').value;
+            var totalScore1 = 0
+            var content1 = ""
+            var title1 = ""
+            const hw1Range = "A1:R999"
+            const hw1_sales_url = `https://sheets.googleapis.com/v4/spreadsheets/1PxEk88jAMwNQpvKv5OOcZdCFGcCIy9VE8EL1nH2NC7o/values/hw-sales!${hw1Range}?key=${apiKey}`;
+
+            fetch(hw1_sales_url)
+                .then(response => response.json())
+                .then(data => {
+                    const values = data.values;
+                    title1 += `<h3>Homework 1: `
+                    values.some(row => {
+                        if (ciEquals(row[2], agentCode)){
+                            totalScore1 += parseInt(row[14]);
+                            content1 += `<li>${row[1]}: ${row[14]}</li>`
+                        }
+                    })
+                    content1 += "------------------"
+                    values.some(row =>{
+                        if(ciEquals(row[3], agentCode)){
+                            totalScore1 += parseInt(row[15]);
+                            content1 += `<li>${row[1]}: ${row[15]}</li>`
+                        }
+                    })
+                    console.log(totalScore1)
+                    details.innerHTML += title1 + totalScore1 + "</h3><ul>" + content1 + "</ul>"
+                })
+                .catch(error => console.log('Error:', error))
+                flag1 = true;
+        }
+
+        function getDetails_hw2() {
+            details.innerHTML = "";
+            const agentCode = document.getElementById('agentCode').value;
+            var totalScore2 = 0
+            var content2 = ""
+            var title2 = ""
+            const hw2Range = "A1000:R1999"
+            const hw2_sales_url = `https://sheets.googleapis.com/v4/spreadsheets/1PxEk88jAMwNQpvKv5OOcZdCFGcCIy9VE8EL1nH2NC7o/values/hw-sales!${hw2Range}?key=${apiKey}`
+            
+            fetch(hw2_sales_url)
+                .then(response => response.json())
+                .then(data => {
+                    const values = data.values;
+                    title2 += `<h3>Homework 2: `
+                    values.some(row => {
+                        if (ciEquals(row[2], agentCode)){
+                            totalScore2 += parseInt(row[14]);
+                            content2 += `<li>${row[1]}: ${row[14]}</li>`
+                        }
+                    })
+                    content2 += "------------------"
+                    values.some(row =>{
+                        if(ciEquals(row[3], agentCode)){
+                            totalScore2 += parseInt(row[15]);
+                            content2 += `<li>${row[1]}: ${row[15]}</li>`
+                        }
+                    })
+                    console.log(totalScore2)
+                    details.innerHTML += title2 + totalScore2 + "</h3><ul>" + content2 + "</ul>"
+                })
+                .catch(error => console.log('Error:', error))
+                flag2 = true;
+        }
+
+        function getDetails_hw3() {
+            details.innerHTML = "";
+            const agentCode = document.getElementById('agentCode').value;
+            var totalScore3 = 0
+            var content3 = ""
+            var title3 = ""
+            const hw3Range = "A2000:R2999"
+            const hw3_sales_url = `https://sheets.googleapis.com/v4/spreadsheets/1PxEk88jAMwNQpvKv5OOcZdCFGcCIy9VE8EL1nH2NC7o/values/hw-sales!${hw3Range}?key=${apiKey}`
+            
+            fetch(hw3_sales_url)
+                .then(response => response.json())
+                .then(data => {
+                    const values = data.values;
+                    title3 += `<h3>Homework 3: `
+                    values.some(row => {
+                        if (ciEquals(row[2], agentCode)){
+                            totalScore3 += parseInt(row[14]);
+                            content3 += `<li>${row[1]}: ${row[14]}</li>`
+                        }
+                    })
+                    content3 += "------------------"
+                    values.some(row =>{
+                        if(ciEquals(row[3], agentCode)){
+                            totalScore3 += parseInt(row[15]);
+                            content3 += `<li>${row[1]}: ${row[15]}</li>`
+                        }
+                    })
+                    console.log(totalScore3)
+                    details.innerHTML += title3 + totalScore3 + "</h3><ul>" + content3 + "</ul>"
+                })
+                .catch(error => console.log('Error:', error))
+                flag3 = true;
+        }
+
+        function getDetails_hw4() {
+            details.innerHTML = "";
+            const agentCode = document.getElementById('agentCode').value;
+            var totalScore4 = 0
+            var content4 = ""
+            var title4 = ""
+            const hw4Range = "A3000:R3999"
+            const hw4_sales_url = `https://sheets.googleapis.com/v4/spreadsheets/1PxEk88jAMwNQpvKv5OOcZdCFGcCIy9VE8EL1nH2NC7o/values/hw-sales!${hw4Range}?key=${apiKey}`
+            
+            fetch(hw4_sales_url)
+                .then(response => response.json())
+                .then(data => {
+                    const values = data.values;
+                    title4 += `<h3>Homework 4: `
+                    values.some(row => {
+                        if (ciEquals(row[2], agentCode)){
+                            totalScore4 += parseInt(row[14]);
+                            content4 += `<li>${row[1]}: ${row[14]}</li>`
+                        }
+                    })
+                    content4 += "------------------"
+                    values.some(row =>{
+                        if(ciEquals(row[3], agentCode)){
+                            totalScore4 += parseInt(row[15]);
+                            content4 += `<li>${row[1]}: ${row[15]}</li>`
+                        }
+                    })
+                    console.log(totalScore4)
+                    details.innerHTML += title4 + totalScore4 + "</h3><ul>" + content4 + "</ul>"
+                })
+                .catch(error => console.log('Error:', error))
+                flag4 = true;
+        }
+        
+        function getDetails_hw5() {
+            details.innerHTML = "";
+            const agentCode = document.getElementById('agentCode').value;
+            var totalScore5 = 0
+            var content5 = ""
+            var title5 = ""
+            const hw5Range = "A4000:R4999"
+            const hw5_sales_url = `https://sheets.googleapis.com/v4/spreadsheets/1PxEk88jAMwNQpvKv5OOcZdCFGcCIy9VE8EL1nH2NC7o/values/hw-sales!${hw5Range}?key=${apiKey}`
+            
+            fetch(hw5_sales_url)
+                .then(response => response.json())
+                .then(data => {
+                    const values = data.values;
+                    title5 += `<h3>Additional Homework: `
+                    values.some(row => {
+                        if (ciEquals(row[2], agentCode)){
+                            totalScore5 += parseInt(row[14]);
+                            content5 += `<li>${row[1]}: ${row[14]}</li>`
+                        }
+                    })
+                    content5 += "------------------"
+                    values.some(row =>{
+                        if(ciEquals(row[3], agentCode)){
+                            totalScore5 += parseInt(row[15]);
+                            content5 += `<li>${row[1]}: ${row[15]}</li>`
+                        }
+                    })
+                    console.log(totalScore5)
+                    details.innerHTML += title5 + totalScore5 + "</h3><ul>" + content5 + "</ul>"
+                })
+                .catch(error => console.log('Error:', error))
         }
     </script>
 </body>
